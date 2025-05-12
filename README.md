@@ -8,3 +8,4 @@ Key Features:
   - Students can view their previous quiz attempts and results.
   - Secure login and registration using Spring Security.
   - Responsive and clean design that works well on all devices.
+  - You can view your total quiz accuracy.
