@@ -9,3 +9,8 @@ Key Features:
   - Secure login and registration using Spring Security.
   - Responsive and clean design that works well on all devices.
   - You can view your total quiz accuracy.
+
+User Stories
+  1. As a teacher, I want to create quizzes with multiple-choice or open-ended questions so that I can evaluate my students efficiently.
+  2. As a student, I want to take quizzes created by my teachers so that I can test my knowledge and track my progress.
+  3. As a user, I want to register and log in to my account so that my quiz data and results are saved and private.
