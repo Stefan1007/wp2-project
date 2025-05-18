@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+    <!-- Matrix Background Container -->
+    <div class="matrix-bg" id="matrix-container"></div>
+    
+    <!-- Computer Graphics -->
+    <div class="device server"></div>
+    <div class="device monitor"></div>
+    <div class="device tablet"></div>
+    <div class="device phone"></div>
+    <div class="device circuit"></div>
+    
+    <!-- Data Flow Lines -->
+    <div class="data-line horizontal-1"></div>
+    <div class="data-line horizontal-2"></div>
+    <div class="data-line vertical-1"></div>
+    <div class="data-line vertical-2"></div>
+    
+    <!-- Circuit Elements Container (will be filled by JS) -->
+    <div id="circuit-container"></div>
+    
+    <div class="navbar">
+        <div>Quiz App</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/quizzes">Quizzes</a>
+            <a href="/profile">Profile</a>
+            <a href="/admin">Admin</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div th:if="${error}" class="alert" th:text="${error}">Error message</div>
+        
+        <div class="welcome-message">
+            <h1>Welcome to your Dashboard!</h1>
+            <p>Here you can manage your quizzes and view your progress.</p>
+        </div>
+
+        <div class="quiz-stats">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${quizzesTaken ?: 0}">0</div>
+                <div class="stat-label">Quizzes Taken</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${averageScore ?: '0%'}">0%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${highestScore ?: '0%'}">0%</div>
+                <div class="stat-label">Highest Score</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Available Quizzes</h2>
+            <div class="card-content">
+                <p th:if="${latestQuizzes == null || latestQuizzes.empty}">Start exploring our quizzes to test your knowledge!</p>
+                <div th:if="${latestQuizzes != null && !latestQuizzes.empty}">
+                    <ul>
+                        <li th:each="quiz : ${latestQuizzes}">
+                            <a th:href="@{/quizzes/{id}(id=${quiz.id})}" th:text="${quiz.title}">Quiz Title</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <a href="/quizzes" class="btn">Browse All Quizzes</a>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Recent Results</h2>
+            <div class="card-content">
+                <p th:if="${recentResults == null || recentResults.empty}">Your recent quiz results will appear here.</p>
+                <div th:if="${recentResults != null && !recentResults.empty}">
+                    <ul>
+                        <li th:each="result : ${recentResults}">
+                            <span th:text="${result.quiz.title}">Quiz Title</span> - 
+                            <span th:text="${result.score}">Score</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        // Matrix effect
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create circuit board elements
+            const circuitContainer = document.getElementById('circuit-container');
+            
+            // Create horizontal circuit lines
+            for (let i = 0; i < 10; i++) {
+                const horizontalLine = document.createElement('div');
+                horizontalLine.className = 'circuit-line circuit-horizontal';
+                horizontalLine.style.top = 10 + (i * Math.floor(window.innerHeight / 10)) + 'px';
+                circuitContainer.appendChild(horizontalLine);
+            }
+            
+            // Create vertical circuit lines
+            for (let i = 0; i < 15; i++) {
+                const verticalLine = document.createElement('div');
+                verticalLine.className = 'circuit-line circuit-vertical';
+                verticalLine.style.left = 20 + (i * Math.floor(window.innerWidth / 15)) + 'px';
+                circuitContainer.appendChild(verticalLine);
+            }
+            
+            // Create circuit nodes (intersections)
+            for (let i = 0; i < 30; i++) {
+                const node = document.createElement('div');
+                node.className = 'circuit-node';
+                node.style.left = Math.random() * window.innerWidth + 'px';
+                node.style.top = Math.random() * window.innerHeight + 'px';
+                
+                // Random size for variety
+                const size = 3 + Math.random() * 5;
+                node.style.width = size + 'px';
+                node.style.height = size + 'px';
+                
+                // Random glow effect for some nodes
+                if (Math.random() > 0.7) {
+                    const color = Math.random() > 0.5 ? '#00bbff' : '#ff5e5e';
+                    node.style.backgroundColor = color;
+                    node.style.boxShadow = `0 0 5px ${color}`;
+                    node.style.opacity = 0.2 + Math.random() * 0.3;
+                    
+                    // Add pulse animation
+                    node.style.animation = 'pulse 2s infinite';
+                }
+                
+                circuitContainer.appendChild(node);
+            }
+            
+            // Matrix rendering code
+            const matrixContainer = document.getElementById('matrix-container');
+            const characters = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+            const numCharacters = 150; // Increased character count
+            
+            // Create matrix characters
+            for (let i = 0; i < numCharacters; i++) {
+                const char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+                
+                // Random positioning
+                char.style.left = Math.random() * 100 + 'vw';
+                char.style.animationDuration = 5 + Math.random() * 15 + 's';
+                char.style.animationDelay = Math.random() * 5 + 's';
+                char.style.opacity = 0.1 + Math.random() * 0.4;
+                
+                // Random font size variation
+                char.style.fontSize = (10 + Math.random() * 10) + 'px';
+                
+                matrixContainer.appendChild(char);
+            }
+            
+            // Periodically change the characters
+            setInterval(() => {
+                const matrixChars = document.querySelectorAll('.matrix-char');
+                matrixChars.forEach(char => {
+                    if (Math.random() > 0.8) {
+                        char.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+                    }
+                });
+            }, 1000);
+
+            // Add some binary streams occasionally
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const binChar = document.createElement('div');
+                    binChar.className = 'matrix-char';
+                    binChar.style.color = '#ff5e5e';
+                    binChar.style.textShadow = '0 0 5px #ff5e5e';
+                    binChar.style.opacity = '0.6';
+                    binChar.style.fontSize = '16px';
+                    binChar.style.left = Math.random() * 100 + 'vw';
+                    binChar.style.animationDuration = '8s';
+                    
+                    // Create a binary sequence
+                    let binSeq = '';
+                    for (let i = 0; i < 8; i++) {
+                        binSeq += Math.round(Math.random());
+                    }
+                    binChar.textContent = binSeq;
+                    
+                    matrixContainer.appendChild(binChar);
+                    
+                    // Remove after animation completes to avoid accumulation
+                    setTimeout(() => {
+                        binChar.remove();
+                    }, 8000);
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html> 

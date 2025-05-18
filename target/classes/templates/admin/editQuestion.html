@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Edit Question</title>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .dashboard {
+        display: flex;
+        flex-wrap: wrap; /* Ensure sidebar and content are responsive */
+    }
+
+    .sidebar {
+        flex: 1;
+        max-width: 240px; /* Maximum width of the sidebar */
+        min-width: 200px; /* Minimum width of the sidebar */
+        background-color: #004d99;
+        color: #fff;
+        height: 100vh;
+        box-sizing: border-box;
+        padding: 20px;
+    }
+
+    .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+        padding: 10px 0;
+        margin: 5px 0; /* Spacing between links */
+    }
+
+    .sidebar a:hover {
+        background-color: #003366;
+    }
+
+    .main-content {
+        flex: 3;
+        padding: 20px;
+        background-color: #f7f7f7;
+        overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            max-width: 100%;
+            height: auto;
+            padding: 15px;
+        }
+
+        .main-content {
+            padding: 15px;
+        }
+    }
+
+    /* Rest of your form and button styles */
+</style>
+
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <!-- Sidebar content -->
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/quizzes">Manage Quizzes</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="main-content">
+        <!-- Your existing page content -->
+    </div>
+</div>
+
+<h2>Edit Question</h2>
+<form th:action="@{/admin/questions/{id}/update(id=${question.id})}" th:object="${question}" method="post">
+    <label for="text">Question:</label>
+    <input type="text" id="text" name="text" th:value="*{text}" required/>
+
+    <label for="optionA">Option A:</label>
+    <input type="text" id="optionA" name="optionA" th:value="*{optionA}" required/>
+
+    <label for="optionB">Option B:</label>
+    <input type="text" id="optionB" name="optionB" th:value="*{optionB}" required/>
+
+    <label for="optionC">Option C:</label>
+    <input type="text" id="optionC" name="optionC" th:value="*{optionC}" required/>
+
+    <label for="correctAnswer">Correct Answer:</label>
+    <select id="correctAnswer" name="correctAnswer" th:field="*{correctAnswer}" required>
+        <option value="A" th:selected="${question.correctAnswer == 'A'}">Option A</option>
+        <option value="B" th:selected="${question.correctAnswer == 'B'}">Option B</option>
+        <option value="C" th:selected="${question.correctAnswer == 'C'}">Option C</option>
+    </select>
+
+    <button type="submit">Update Question</button>
+</form>
+
+</body>
+</html>

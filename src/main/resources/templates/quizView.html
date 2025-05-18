@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${quiz.title}">Quiz Title</title>
+</head>
+<body>
+<h1 th:text="${quiz.title}">Quiz Title</h1>
+
+<!-- Loop through each question -->
+<div th:each="question : ${questions}">
+  <div>
+    <p th:text="${question.text}">Question Text</p>
+    <form th:action="@{/quizzes/{quizId}/submit(quizId=${quiz.id})}" method="post">
+      <!-- Assuming each question has multiple choices labeled as optionA, optionB, optionC, and correctAnswer for the correct one -->
+      <fieldset>
+        <legend>Options</legend>
+        <div>
+          <input type="radio" th:id="${'question' + question.id + 'optionA'}" name="question" th:value="${question.optionA}" />
+          <label th:for="${'question' + question.id + 'optionA'}" th:text="${question.optionA}">Option A</label>
+        </div>
+        <div>
+          <input type="radio" th:id="${'question' + question.id + 'optionB'}" name="question" th:value="${question.optionB}" />
+          <label th:for="${'question' + question.id + 'optionB'}" th:text="${question.optionB}">Option B</label>
+        </div>
+        <div>
+          <input type="radio" th:id="${'question' + question.id + 'optionC'}" name="question" th:value="${question.optionC}" />
+          <label th:for="${'question' + question.id + 'optionC'}" th:text="${question.optionC}">Option C</label>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

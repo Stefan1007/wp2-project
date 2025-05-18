@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Quiz Results</title>
+	<style>
+		body, html {
+			margin: 0;
+			padding: 0;
+			font-family: 'Segoe UI', Arial, sans-serif;
+			background-color: #f4f4f4;
+			color: #333;
+		}
+
+		.navbar {
+			background-color: #004d99;
+			color: white;
+			padding: 10px 20px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.navbar a {
+			color: white;
+			text-decoration: none;
+			padding: 5px 10px;
+			margin-left: 10px;
+		}
+
+		.navbar a:hover {
+			background-color: #003366;
+			border-radius: 5px;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+		}
+
+		.results-card {
+			background-color: white;
+			border-radius: 8px;
+			padding: 20px;
+			margin-bottom: 20px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			text-align: center;
+		}
+
+		.score-display {
+			font-size: 2em;
+			font-weight: bold;
+			margin: 20px 0;
+			color: #004d99;
+		}
+
+		.score-percentage {
+			font-size: 1.2em;
+			color: #666;
+			margin-bottom: 20px;
+		}
+
+		.score-feedback {
+			margin: 20px 0;
+			padding: 15px;
+			border-radius: 5px;
+		}
+
+		.excellent {
+			background-color: #d4edda;
+			color: #155724;
+		}
+
+		.good {
+			background-color: #fff3cd;
+			color: #856404;
+		}
+
+		.needs-improvement {
+			background-color: #f8d7da;
+			color: #721c24;
+		}
+
+		.question-review {
+			background-color: white;
+			border-radius: 8px;
+			padding: 20px;
+			margin-bottom: 15px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.question-review h3 {
+			margin-top: 0;
+			color: #004d99;
+		}
+
+		.answer-option {
+			margin: 10px 0;
+			padding: 10px;
+			border-radius: 5px;
+			display: flex;
+			align-items: center;
+		}
+
+		.answer-option.correct {
+			background-color: #d4edda;
+		}
+
+		.answer-option.incorrect {
+			background-color: #f8d7da;
+		}
+
+		.answer-option.user-selected {
+			border-left: 5px solid #004d99;
+		}
+
+		.answer-indicator {
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			margin-right: 10px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-weight: bold;
+		}
+
+		.indicator-correct {
+			background-color: #28a745;
+		}
+
+		.indicator-incorrect {
+			background-color: #dc3545;
+		}
+
+		.button-group {
+			display: flex;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
+
+		.btn {
+			display: inline-block;
+			padding: 10px 20px;
+			border-radius: 5px;
+			text-decoration: none;
+			font-weight: bold;
+			transition: background-color 0.3s;
+		}
+
+		.btn-primary {
+			background-color: #004d99;
+			color: white;
+		}
+
+		.btn-primary:hover {
+			background-color: #003366;
+		}
+
+		.btn-secondary {
+			background-color: #6c757d;
+			color: white;
+		}
+
+		.btn-secondary:hover {
+			background-color: #5a6268;
+		}
+	</style>
+</head>
+<body>
+	<div class="navbar">
+		<div>Quiz App</div>
+		<div>
+			<a href="/dashboard">Dashboard</a>
+			<a href="/quizzes">Quizzes</a>
+			<a href="/profile">Profile</a>
+			<a href="/admin">Admin</a>
+			<a href="/logout">Logout</a>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="results-card">
+			<h1>Quiz Results</h1>
+			
+			<div class="score-display" th:text="${score} + '/' + ${totalQuestions}">8/10</div>
+			
+			<div class="score-percentage" th:with="percentage=${score * 1.0 / totalQuestions}" th:text="${#numbers.formatPercent(percentage, 0, 0)}">80%</div>
+			
+			<div class="score-feedback" th:with="percentage=${score * 1.0 / totalQuestions}" 
+				 th:classappend="${percentage >= 0.8} ? 'excellent' : (${percentage >= 0.6} ? 'good' : 'needs-improvement')">
+				<span th:if="${percentage >= 0.8}">Excellent work! You've mastered this quiz.</span>
+				<span th:if="${percentage >= 0.6 && percentage < 0.8}">Good job! You have a solid understanding of the material.</span>
+				<span th:if="${percentage < 0.6}">You might need to review the material again. Keep practicing!</span>
+			</div>
+			
+			<p>Review your answers below or take another quiz.</p>
+		</div>
+		
+		<h2>Question Review</h2>
+		
+		<div th:each="question : ${quiz.questions}" class="question-review">
+			<h3 th:text="${question.text}">Question text goes here</h3>
+			
+			<!-- Option A -->
+			<div class="answer-option" 
+				 th:with="userAnswer=${submittedAnswers != null && submittedAnswers[question.id] != null ? submittedAnswers[question.id] : ''},
+						 userSelectedA=${userAnswer != null && #strings.toString(userAnswer) == 'A'},
+						 correctAnswerA=${#strings.toString(question.correctAnswer) == 'A'},
+						 showA=${userSelectedA == true || correctAnswerA == true}"
+				 th:classappend="${correctAnswerA ? 'correct' : (userSelectedA && !correctAnswerA ? 'incorrect' : '')}
+							+ ${userSelectedA ? ' user-selected' : ''}"
+				 th:if="${showA}">
+				<div class="answer-indicator" 
+					 th:classappend="${correctAnswerA ? 'indicator-correct' : 'indicator-incorrect'}">
+					<span th:text="${correctAnswerA ? '✓' : '✗'}"></span>
+				</div>
+				<span th:text="${question.optionA}">Option A</span>
+			</div>
+			
+			<!-- Option B -->
+			<div class="answer-option" 
+				 th:with="userAnswer=${submittedAnswers != null && submittedAnswers[question.id] != null ? submittedAnswers[question.id] : ''},
+						 userSelectedB=${userAnswer != null && #strings.toString(userAnswer) == 'B'},
+						 correctAnswerB=${#strings.toString(question.correctAnswer) == 'B'},
+						 showB=${userSelectedB == true || correctAnswerB == true}"
+				 th:classappend="${correctAnswerB ? 'correct' : (userSelectedB && !correctAnswerB ? 'incorrect' : '')}
+							+ ${userSelectedB ? ' user-selected' : ''}"
+				 th:if="${showB}">
+				<div class="answer-indicator" 
+					 th:classappend="${correctAnswerB ? 'indicator-correct' : 'indicator-incorrect'}">
+					<span th:text="${correctAnswerB ? '✓' : '✗'}"></span>
+				</div>
+				<span th:text="${question.optionB}">Option B</span>
+			</div>
+			
+			<!-- Option C -->
+			<div class="answer-option" 
+				 th:with="userAnswer=${submittedAnswers != null && submittedAnswers[question.id] != null ? submittedAnswers[question.id] : ''},
+						 userSelectedC=${userAnswer != null && #strings.toString(userAnswer) == 'C'},
+						 correctAnswerC=${#strings.toString(question.correctAnswer) == 'C'},
+						 showC=${userSelectedC == true || correctAnswerC == true}"
+				 th:classappend="${correctAnswerC ? 'correct' : (userSelectedC && !correctAnswerC ? 'incorrect' : '')}
+							+ ${userSelectedC ? ' user-selected' : ''}"
+				 th:if="${showC}">
+				<div class="answer-indicator" 
+					 th:classappend="${correctAnswerC ? 'indicator-correct' : 'indicator-incorrect'}">
+					<span th:text="${correctAnswerC ? '✓' : '✗'}"></span>
+				</div>
+				<span th:text="${question.optionC}">Option C</span>
+			</div>
+		</div>
+		
+		<div class="button-group">
+			<a href="/quizzes" class="btn btn-secondary">Take Another Quiz</a>
+			<a href="/dashboard" class="btn btn-primary">Back to Dashboard</a>
+		</div>
+	</div>
+</body>
+</html>

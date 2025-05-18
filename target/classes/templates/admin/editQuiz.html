@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Quiz</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: #004d99;
+            color: #ffffff;
+            padding: 20px;
+            width: 240px;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 0;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #003366;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], 
+        input[type="number"], 
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/quizzes">Manage Quizzes</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <h1>Edit Quiz</h1>
+            
+            <div th:if="${message}" class="alert alert-success" role="alert">
+                <span th:text="${message}"></span>
+            </div>
+            
+            <form th:action="@{/admin/quizzes/{id}(id=${quiz.id})}" th:object="${quiz}" method="post">
+                <input type="hidden" th:field="*{id}" />
+                
+                <div class="form-group">
+                    <label for="title">Quiz Title</label>
+                    <input type="text" id="title" th:field="*{title}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="duration">Duration (minutes)</label>
+                    <input type="number" id="duration" th:field="*{duration}" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn">Update Quiz</button>
+                    <a th:href="@{/admin/quizzes/{id}/questions(id=${quiz.id})}" class="btn" style="background-color: #007bff;">Manage Questions</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

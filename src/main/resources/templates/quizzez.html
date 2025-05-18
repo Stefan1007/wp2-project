@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quizzes</title>
+</head>
+<body>
+<h2>Available Quizzes</h2>
+<div th:if="${not #lists.isEmpty(quizzes)}">
+    <ul>
+        <li th:each="quiz : ${quizzes}" th:text="${quiz.title}">Quiz Title</li>
+    </ul>
+</div>
+<div th:if="${#lists.isEmpty(quizzes)}">
+    <p>No quizzes available.</p>
+</div>
+<a href="/admin/quizzes/new">Create New Quiz</a>
+</body>
+</html>

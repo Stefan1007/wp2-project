@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Add Question</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            flex: 1;
+            max-width: 240px;
+            min-width: 200px;
+            background-color: #004d99;
+            color: #fff;
+            height: 100vh;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            display: block;
+            padding: 10px 0;
+            margin: 5px 0;
+        }
+
+        .sidebar a:hover {
+            background-color: #003366;
+        }
+
+        .main-content {
+            flex: 3;
+            padding: 20px;
+            background-color: #f7f7f7;
+            overflow-y: auto;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        form div {
+            margin-bottom: 10px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"], form select {
+            width: 100%;
+            padding: 8px;
+            margin: 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            background-color: #004d99;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #003366;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                max-width: 100%;
+                height: auto;
+                padding: 15px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <!-- Sidebar content -->
+        <a href="/admin/home">Dashboard</a>
+        <a href="/admin/manageQuizzes">Manage Quizzes</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="main-content">
+        <h1>Add a New Question</h1>
+        <form th:action="@{/admin/quizzes/{quizId}/questions(quizId=${quizId})}" th:object="${question}" method="post">
+            <div>
+                <label for="text">Question:</label>
+                <input type="text" id="text" name="text" th:value="*{text}" required />
+            </div>
+            <div>
+                <label for="optionA">Option A:</label>
+                <input type="text" id="optionA" name="optionA" th:value="*{optionA}" required />
+            </div>
+            <div>
+                <label for="optionB">Option B:</label>
+                <input type="text" id="optionB" name="optionB" th:value="*{optionB}" required />
+            </div>
+            <div>
+                <label for="optionC">Option C:</label>
+                <input type="text" id="optionC" name="optionC" th:value="*{optionC}" required />
+            </div>
+            <div>
+                <label for="correctAnswer">Correct Answer:</label>
+                <select id="correctAnswer" name="correctAnswer" required>
+                    <option value="">--Select the Correct Answer--</option>
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                    <option value="C">Option C</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit">Add Question</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

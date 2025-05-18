@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Quizzes</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #004d99;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+
+        .navbar a:hover {
+            background-color: #003366;
+            border-radius: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #004d99;
+            margin-bottom: 20px;
+        }
+
+        .quiz-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .quiz-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-title {
+            font-size: 1.2em;
+            margin-top: 0;
+            color: #004d99;
+        }
+
+        .quiz-info {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #004d99;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #003366;
+        }
+
+        .no-quizzes {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>Quiz App</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/quizzes">Quizzes</a>
+            <a href="/profile">Profile</a>
+            <a href="/admin">Admin</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Available Quizzes</h1>
+        
+        <div class="quiz-list" th:if="${!quizzes.empty}">
+            <div class="quiz-card" th:each="quiz : ${quizzes}">
+                <h2 class="quiz-title" th:text="${quiz.title}">Quiz Title</h2>
+                <p class="quiz-info">
+                    <span th:text="${quiz.questions.size()}">10</span> questions | 
+                    <span th:text="${quiz.duration}">15</span> minutes
+                </p>
+                <a th:href="@{/quizzes/{id}(id=${quiz.id})}" class="btn">Take Quiz</a>
+            </div>
+        </div>
+        
+        <div class="no-quizzes" th:if="${quizzes.empty}">
+            <p>No quizzes are available at this time. Please check back later.</p>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,147 @@
+<!-- Create/Edit Quiz -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Create/Edit Quiz</title>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .dashboard {
+        display: flex;
+        flex-wrap: wrap; /* Ensure sidebar and content are responsive */
+    }
+
+    .sidebar {
+        flex: 1;
+        max-width: 240px; /* Maximum width of the sidebar */
+        min-width: 200px; /* Minimum width of the sidebar */
+        background-color: #004d99;
+        color: #fff;
+        height: 100vh;
+        box-sizing: border-box;
+        padding: 20px;
+    }
+
+    .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+        padding: 10px 0;
+        margin: 5px 0; /* Spacing between links */
+    }
+
+    .sidebar a:hover {
+        background-color: #003366;
+    }
+
+    .main-content {
+        flex: 3;
+        padding: 20px;
+        background-color: #f7f7f7;
+        overflow-y: auto;
+    }
+
+    /* General form improvements */
+    form {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 20px auto;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-size: 16px;
+        color: #333;
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"], select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box; /* Ensures padding does not affect width */
+        transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, select:focus {
+        border-color: #007bff; /* Highlight focus */
+        outline: none;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .sidebar {
+            max-width: 100%;
+            height: auto;
+            padding: 15px;
+        }
+
+        .main-content {
+            padding: 15px;
+        }
+
+        form {
+            padding: 20px;
+        }
+    }
+</style>
+
+
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <!-- Sidebar content -->
+        <a href="/admin/home">Dashboard</a>
+        <a href="/admin/manageQuizzes">Manage Quizzes</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="main-content">
+        <h1>Create/Edit a Quiz</h1>
+        <form th:action="@{/admin/quizzes}" th:object="${quiz}" method="post">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" th:value="*{title}" required/>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration (in minutes):</label>
+                <input type="number" id="duration" name="duration" th:value="*{duration}" min="1" required/>
+            </div>
+            <div class="form-group">
+                <button type="submit">Save Quiz</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Import/Export Quizzes</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: #004d99;
+            color: #ffffff;
+            padding: 20px;
+            width: 240px;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 0;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #003366;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .code-example {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+            padding: 15px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/quizzes">Manage Quizzes</a>
+        <a href="/admin/quizzes/import-export">Import/Export</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <h1>Quiz Import/Export</h1>
+            
+            <div th:if="${message}" class="alert alert-success" role="alert">
+                <span th:text="${message}"></span>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+            
+            <div class="card">
+                <h2>Export Quizzes</h2>
+                <p>Export all quizzes or individual quizzes for backup or sharing.</p>
+                
+                <a href="/admin/quizzes/export-all" class="btn btn-primary">Export All Quizzes</a>
+                
+                <a href="/admin/quizzes" class="btn btn-secondary">Return to Quiz List to Export Individual Quizzes</a>
+            </div>
+            
+            <div class="card">
+                <h2>Import Quizzes</h2>
+                <p>Import quizzes from a JSON file.</p>
+                
+                <form th:action="@{/admin/quizzes/import}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file">Select Quiz JSON File</label>
+                        <input type="file" id="file" name="file" accept=".json" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">Import Quizzes</button>
+                </form>
+                
+                <div class="instructions">
+                    <h3>Import Format</h3>
+                    <p>The JSON file should be an array of quiz objects with the following structure:</p>
+                    
+                    <div class="code-example">
+<pre>
+[
+  {
+    "title": "Quiz Title",
+    "duration": 15,
+    "questions": [
+      {
+        "text": "Question text?",
+        "optionA": "First option",
+        "optionB": "Second option",
+        "optionC": "Third option",
+        "correctAnswer": "A"
+      },
+      // More questions...
+    ]
+  },
+  // More quizzes...
+]
+</pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Tips</h2>
+                <ul>
+                    <li>Export quizzes for backup purposes</li>
+                    <li>Share exported quizzes with other instructors</li>
+                    <li>Import quizzes from external sources</li>
+                    <li>Make sure imported quizzes follow the correct JSON format</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html> 

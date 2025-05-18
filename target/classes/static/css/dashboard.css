@@ -1,0 +1,625 @@
+/* dashboard.css - Futuristic Dashboard Theme */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #05101f;
+    color: #e0e6ff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Matrix-like falling characters */
+@keyframes matrix-fall {
+    0% { 
+        transform: translateY(-100%);
+        opacity: 1;
+    }
+    85% {
+        opacity: 0.8;
+    }
+    100% { 
+        transform: translateY(1000%);
+        opacity: 0;
+    }
+}
+
+.matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.matrix-char {
+    position: absolute;
+    color: #0f0;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0.3;
+    text-shadow: 0 0 5px #0f0;
+    user-select: none;
+    pointer-events: none;
+    animation: matrix-fall 10s linear infinite;
+}
+
+/* Computer/device graphics */
+.device {
+    position: fixed;
+    z-index: -3;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.device.server {
+    bottom: 20px;
+    left: 20px;
+    width: 200px;
+    height: 300px;
+    border: 2px solid #00bbff;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 187, 255, 0.5);
+}
+
+.device.server::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    height: 20px;
+    background: linear-gradient(90deg, #00bbff, transparent, #00bbff);
+    animation: server-light 2s infinite;
+}
+
+.device.server::after {
+    content: "";
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: 
+        repeating-linear-gradient(0deg, 
+            rgba(0, 187, 255, 0.2) 0px, 
+            rgba(0, 187, 255, 0.2) 2px, 
+            transparent 2px, 
+            transparent 10px);
+}
+
+.device.monitor {
+    top: 50px;
+    right: 50px;
+    width: 250px;
+    height: 150px;
+    border: 2px solid #ff5e5e;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(255, 94, 94, 0.5);
+}
+
+.device.monitor::before {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    width: 50px;
+    height: 15px;
+    background-color: rgba(255, 94, 94, 0.5);
+    transform: translateX(-50%);
+}
+
+.device.monitor::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 94, 94, 0.2) 100%);
+}
+
+.device.tablet {
+    bottom: 150px;
+    right: 100px;
+    width: 120px;
+    height: 180px;
+    border: 2px solid #00ff99;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.5);
+}
+
+.device.tablet::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: linear-gradient(45deg, transparent 0%, rgba(0, 255, 153, 0.2) 100%);
+}
+
+.device.phone {
+    top: 250px;
+    left: 100px;
+    width: 60px;
+    height: 120px;
+    border: 2px solid #bb00ff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(187, 0, 255, 0.5);
+}
+
+.device.phone::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 20px;
+    height: 3px;
+    background-color: rgba(187, 0, 255, 0.5);
+    border-radius: 2px;
+    transform: translateX(-50%);
+}
+
+.device.circuit {
+    top: 65%;
+    left: 45%;
+    width: 200px;
+    height: 200px;
+    border: none;
+    opacity: 0.05;
+}
+
+.device.circuit::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at center, rgba(0, 187, 255, 0.7) 0%, rgba(0, 187, 255, 0) 70%),
+        repeating-conic-gradient(rgba(0, 187, 255, 0) 0deg, rgba(0, 187, 255, 0) 5deg, rgba(0, 187, 255, 0.5) 5deg, rgba(0, 187, 255, 0.5) 6deg);
+    border-radius: 50%;
+    animation: rotate 20s linear infinite;
+}
+
+.device.circuit::after {
+    content: "";
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    background: 
+        radial-gradient(circle at center, rgba(255, 94, 94, 0.7) 0%, rgba(255, 94, 94, 0) 70%),
+        repeating-conic-gradient(rgba(255, 94, 94, 0) 0deg, rgba(255, 94, 94, 0) 15deg, rgba(255, 94, 94, 0.5) 15deg, rgba(255, 94, 94, 0.5) 16deg);
+    border-radius: 50%;
+    animation: rotate 10s linear infinite reverse;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes server-light {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Data flow lines */
+.data-line {
+    position: fixed;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00bbff, transparent);
+    z-index: -3;
+    opacity: 0.2;
+}
+
+.data-line.horizontal-1 {
+    width: 50%;
+    top: 30%;
+    left: 0;
+    animation: data-flow-right 4s infinite linear;
+}
+
+.data-line.horizontal-2 {
+    width: 30%;
+    top: 70%;
+    right: 0;
+    animation: data-flow-left 3s infinite linear;
+}
+
+.data-line.vertical-1 {
+    width: 2px;
+    height: 40%;
+    top: 10%;
+    left: 20%;
+    background: linear-gradient(0deg, transparent, #ff5e5e, transparent);
+    animation: data-flow-down 5s infinite linear;
+}
+
+.data-line.vertical-2 {
+    width: 2px;
+    height: 30%;
+    bottom: 0;
+    right: 30%;
+    background: linear-gradient(0deg, transparent, #00ff99, transparent);
+    animation: data-flow-up 4s infinite linear;
+}
+
+@keyframes data-flow-right {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes data-flow-left {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+@keyframes data-flow-down {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+@keyframes data-flow-up {
+    0% { transform: translateY(100%); }
+    100% { transform: translateY(-100%); }
+}
+
+/* Circuit board pattern */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, rgba(0,30,60,0.1) 1px, transparent 1px),
+        linear-gradient(rgba(0,30,60,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50px 50px, rgba(0, 119, 255, 0.05) 2px, transparent 2px),
+        radial-gradient(circle at 100px 150px, rgba(0, 119, 255, 0.05) 3px, transparent 3px),
+        radial-gradient(circle at 150px 250px, rgba(0, 119, 255, 0.05) 2px, transparent 2px),
+        radial-gradient(circle at 250px 200px, rgba(0, 119, 255, 0.05) 2px, transparent 2px),
+        radial-gradient(circle at 300px 100px, rgba(0, 119, 255, 0.05) 2px, transparent 2px);
+    background-size: 20px 20px, 20px 20px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px;
+    z-index: -1;
+}
+
+/* Circuit lines */
+.circuit-line {
+    position: fixed;
+    background-color: rgba(0, 119, 255, 0.05);
+    z-index: -2;
+}
+
+.circuit-horizontal {
+    height: 1px;
+    width: 100%;
+}
+
+.circuit-vertical {
+    width: 1px;
+    height: 100%;
+}
+
+.circuit-node {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: rgba(0, 119, 255, 0.1);
+    z-index: -2;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.2; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 0.2; }
+}
+
+/* Animated flow effect */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(32, 84, 178, 0.1) 45%, 
+        rgba(245, 61, 61, 0.1) 55%, 
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: flow 8s linear infinite;
+    z-index: -1;
+}
+
+@keyframes flow {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.navbar {
+    background-color: rgba(0, 12, 33, 0.9);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 119, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 119, 255, 0.3);
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    margin-left: 15px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar a:hover {
+    background-color: rgba(0, 119, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 119, 255, 0.5);
+}
+
+.navbar a::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #00bbff;
+    transition: width 0.3s;
+}
+
+.navbar a:hover::before {
+    width: 100%;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    position: relative;
+}
+
+/* Digital arrow accent in the background */
+.container::before {
+    content: ">";
+    font-family: monospace;
+    position: absolute;
+    font-size: 300px;
+    opacity: 0.1;
+    color: #ff5e5e;
+    top: 50%;
+    right: -50px;
+    transform: translateY(-50%);
+    z-index: -1;
+}
+
+.welcome-message {
+    background-color: rgba(15, 30, 60, 0.7);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0, 119, 255, 0.3);
+    border-left: 4px solid #00bbff;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-message::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 119, 255, 0.1));
+}
+
+h1, h2 {
+    color: #00bbff;
+    text-shadow: 0 0 5px rgba(0, 187, 255, 0.5);
+    position: relative;
+}
+
+h1::after, h2::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, #00bbff, transparent);
+}
+
+.card {
+    background-color: rgba(15, 30, 60, 0.7);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0, 119, 255, 0.15);
+    border: 1px solid rgba(0, 119, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 25px rgba(0, 119, 255, 0.25);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        #00bbff, 
+        #ff5e5e, 
+        #00bbff);
+    background-size: 200% 100%;
+    animation: gradient-shift 4s linear infinite;
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.card-title {
+    font-size: 1.5em;
+    margin-top: 0;
+}
+
+.card-content {
+    margin-bottom: 20px;
+}
+
+.card-content a {
+    color: #00bbff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.card-content a:hover {
+    color: #ff5e5e;
+    text-shadow: 0 0 5px rgba(255, 94, 94, 0.5);
+}
+
+.btn {
+    display: inline-block;
+    background-color: rgba(0, 119, 255, 0.2);
+    color: #00bbff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s;
+    border: 1px solid rgba(0, 119, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 119, 255, 0.2), transparent);
+    transition: left 0.5s;
+    z-index: -1;
+}
+
+.btn:hover {
+    background-color: rgba(0, 119, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 119, 255, 0.4);
+    color: white;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.quiz-stats {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0;
+}
+
+.stat-card {
+    background-color: rgba(20, 40, 80, 0.7);
+    padding: 25px;
+    border-radius: 8px;
+    text-align: center;
+    flex-basis: 30%;
+    box-shadow: 0 0 20px rgba(0, 119, 255, 0.2);
+    border: 1px solid rgba(0, 119, 255, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 119, 255, 0.3);
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(0deg, rgba(0, 119, 255, 0.1), transparent);
+    z-index: 0;
+}
+
+.stat-number {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #00bbff;
+    margin: 15px 0;
+    text-shadow: 0 0 10px rgba(0, 187, 255, 0.5);
+    position: relative;
+    z-index: 1;
+}
+
+.stat-label {
+    color: #a0b0f0;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    color: #00bbff;
+    background-color: rgba(0, 119, 255, 0.1);
+    border: 1px solid rgba(0, 119, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 119, 255, 0.2);
+}
+
+/* List styling */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 119, 255, 0.2);
+    transition: transform 0.2s;
+}
+
+li:hover {
+    transform: translateX(5px);
+}
+
+li:last-child {
+    border-bottom: none;
+} 

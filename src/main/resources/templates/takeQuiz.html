@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${quiz.title}">Take Quiz</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #004d99;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+
+        .navbar a:hover {
+            background-color: #003366;
+            border-radius: 5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .quiz-header {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-info h1 {
+            margin: 0;
+            color: #004d99;
+            font-size: 1.8em;
+        }
+
+        .quiz-info p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+
+        .timer {
+            background-color: #e7f3ff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #004d99;
+        }
+
+        .question-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option {
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .submit-btn {
+            background-color: #004d99;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #003366;
+        }
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .question-navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .question-nav-btn {
+            width: 35px;
+            height: 35px;
+            margin: 5px;
+            border-radius: 50%;
+            background-color: #e7f3ff;
+            border: 1px solid #004d99;
+            color: #004d99;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .question-nav-btn:hover {
+            background-color: #d0e7ff;
+        }
+
+        .question-nav-btn.active {
+            background-color: #004d99;
+            color: white;
+        }
+
+        .question-nav-btn.answered {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #28a745;
+        }
+        
+        .question-nav-btn.unanswered {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #dc3545;
+            animation: pulse 1s infinite;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>Quiz App</div>
+        <div class="timer" id="timer">
+            <span id="minutes">00</span>:<span id="seconds">00</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div th:if="${warning}" class="alert alert-warning" th:text="${warning}">
+            Please answer all questions before submitting.
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}">
+            An error occurred.
+        </div>
+        
+        <div class="quiz-header">
+            <div class="quiz-info">
+                <h1 th:text="${quiz.title}">Quiz Title</h1>
+                <p><span th:text="${questions.size()}">10</span> questions | <span th:text="${duration}">15</span> minutes</p>
+            </div>
+        </div>
+
+        <form th:action="@{/quizzes/{quizId}/submit(quizId=${quiz.id})}" method="post" id="quizForm">
+            <input type="hidden" name="quizId" th:value="${quiz.id}" />
+            
+            <div th:each="question, questionStat : ${questions}" class="question-card" 
+                 th:id="'question-' + ${questionStat.index}" 
+                 th:style="${questionStat.index > 0} ? 'display: none;' : ''"
+                 th:with="isUnanswered=${unansweredQuestions != null && unansweredQuestions.containsKey(question.id)}">
+                
+                <h2 class="question-text" th:text="${question.text}">Question Text</h2>
+                
+                <div th:if="${isUnanswered}" class="alert alert-warning">
+                    This question requires an answer.
+                </div>
+                
+                <ul class="options">
+                    <li class="option">
+                        <input type="radio" 
+                               th:name="'answers[' + ${question.id} + ']'" 
+                               th:id="'question-' + ${question.id} + '-option-A'" 
+                               value="A" 
+                               th:checked="${quizSubmission != null && quizSubmission.answers != null && quizSubmission.answers[question.id] == 'A'}" />
+                        <label th:for="'question-' + ${question.id} + '-option-A'" th:text="${question.optionA}">Option A</label>
+                    </li>
+                    <li class="option">
+                        <input type="radio" 
+                               th:name="'answers[' + ${question.id} + ']'" 
+                               th:id="'question-' + ${question.id} + '-option-B'" 
+                               value="B" 
+                               th:checked="${quizSubmission != null && quizSubmission.answers != null && quizSubmission.answers[question.id] == 'B'}" />
+                        <label th:for="'question-' + ${question.id} + '-option-B'" th:text="${question.optionB}">Option B</label>
+                    </li>
+                    <li class="option">
+                        <input type="radio" 
+                               th:name="'answers[' + ${question.id} + ']'" 
+                               th:id="'question-' + ${question.id} + '-option-C'" 
+                               value="C" 
+                               th:checked="${quizSubmission != null && quizSubmission.answers != null && quizSubmission.answers[question.id] == 'C'}" />
+                        <label th:for="'question-' + ${question.id} + '-option-C'" th:text="${question.optionC}">Option C</label>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="question-navigation">
+                <button type="button" 
+                        th:each="question, questionStat : ${questions}" 
+                        th:text="${questionStat.count}" 
+                        th:onclick="'showQuestion(' + ${questionStat.index} + ')'"
+                        th:class="'question-nav-btn ' + 
+                                 (${questionStat.index == 0} ? 'active ' : '') + 
+                                 (${unansweredQuestions != null && unansweredQuestions.containsKey(question.id)} ? 'unanswered' : '')">
+                </button>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Submit Quiz</button>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        // Set up the timer
+        const duration = [[${duration}]]; // Duration in minutes
+        let totalSeconds = duration * 60;
+        const minutesDisplay = document.getElementById('minutes');
+        const secondsDisplay = document.getElementById('seconds');
+        const submitBtn = document.getElementById('submitBtn');
+        const timerElement = document.getElementById('timer');
+        
+        // Question navigation
+        const questions = document.querySelectorAll('.question-card');
+        const navButtons = document.querySelectorAll('.question-nav-btn');
+        
+        // Function to show a specific question
+        function showQuestion(index) {
+            questions.forEach((q, i) => {
+                q.style.display = i === index ? 'block' : 'none';
+            });
+            
+            navButtons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+        }
+        
+        // Mark questions as answered when an option is selected
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionId = this.name.match(/\d+/)[0];
+                const questionIndex = Array.from(questions).findIndex(q => q.querySelector('input').name.includes(questionId));
+                navButtons[questionIndex].classList.add('answered');
+                navButtons[questionIndex].classList.remove('unanswered');
+            });
+        });
+        
+        // Timer countdown function
+        function updateTimer() {
+            if (totalSeconds <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('quizForm').submit();
+                return;
+            }
+            
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            minutesDisplay.textContent = minutes.toString().padStart(2, '0');
+            secondsDisplay.textContent = seconds.toString().padStart(2, '0');
+            
+            // Change color when less than 5 minutes remain
+            if (totalSeconds <= 300) {
+                timerElement.style.backgroundColor = '#ffecec';
+                timerElement.style.color = '#dc3545';
+                
+                // Make it blink when less than 1 minute remains
+                if (totalSeconds <= 60) {
+                    timerElement.style.animation = 'blink 1s linear infinite';
+                }
+            }
+            
+            totalSeconds--;
+        }
+        
+        // Mark answered questions on page load (for when the form is resubmitted with validation errors)
+        function markAnsweredQuestions() {
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                const questionId = radio.name.match(/\d+/)[0];
+                const questionIndex = Array.from(questions).findIndex(q => q.querySelector('input').name.includes(questionId));
+                if (questionIndex >= 0) {
+                    navButtons[questionIndex].classList.add('answered');
+                    navButtons[questionIndex].classList.remove('unanswered');
+                }
+            });
+        }
+        
+        // Initialize
+        markAnsweredQuestions();
+        
+        // If there are unanswered questions highlighted, show the first one
+        const firstUnansweredBtn = document.querySelector('.question-nav-btn.unanswered');
+        if (firstUnansweredBtn) {
+            const index = Array.from(navButtons).indexOf(firstUnansweredBtn);
+            showQuestion(index);
+        }
+        
+        // Start the timer
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000);
+        
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes blink {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Prevent form submission when pressing Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Warn users before navigating away from the page
+        window.onbeforeunload = function() {
+            return "Are you sure you want to leave? Your quiz progress will be lost.";
+        };
+        
+        // Remove warning when submitting the form
+        document.getElementById('quizForm').addEventListener('submit', function() {
+            window.onbeforeunload = null;
+        });
+    </script>
+</body>
+</html>
