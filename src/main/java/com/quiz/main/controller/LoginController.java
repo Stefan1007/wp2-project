@@ -28,6 +28,12 @@ public class LoginController {
                 session.setAttribute("currentUser", user);
                 // Adjust role check to match stored role strings
                 if ("ROLE_ADMIN".equals(user.getRole())) {
+                    return new ModelAndView("redirect:/admin/home"); // Redirect to admin home page
+                } else if ("ROLE_USER".equals(user.getRole())) {
+                    return new ModelAndView("redirect:/user/home"); // Redirect to user home page
+                } else {
+                    // Handle unexpected role
+                    ModelAndView modelAndView = new ModelAndView("login");
                     modelAndView.addObject("error", "User role is not recognized.");
                     return modelAndView;
                 }
@@ -39,7 +45,8 @@ public class LoginController {
     }
 
     @RequestMapping("/logout")
-
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/login"; // Redirect to login page after logout
     }
 }
